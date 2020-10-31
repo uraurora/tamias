@@ -1,9 +1,7 @@
 package com.sei.tamias.core.global
 
-import com.sei.tamias.db.service.UserService
-import com.sei.tamias.db.service.impl.UserServiceImpl
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
+import java.nio.file.Path
+import java.nio.file.WatchEvent
 import java.time.LocalDateTime
 
 /**
@@ -19,9 +17,7 @@ class AppContext: MutableMap<String, Any> by context.get(){
 }
 
 /**
- * 上下文数据类
+ * 文件变更上下文数据类，包含文件变更类型，文件名，时间，和具体路径
  */
-data class tamiasContext(val datetime: LocalDateTime = LocalDateTime.now())
+data class WatchEventContext<T>(val event: WatchEvent<T>, val dir: Path?, val datetime: LocalDateTime = LocalDateTime.now())
 
-fun main() {
-}

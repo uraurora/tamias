@@ -1,22 +1,27 @@
 package com.sei.tamias.core.listener
 
 import com.google.common.collect.Maps
+import com.sei.tamias.core.global.ALL_PATTERN
+import com.sei.tamias.core.global.WatchEventContext
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
+import lombok.extern.slf4j.Slf4j
+import org.slf4j.Logger
 import java.io.IOException
 import java.nio.file.*
 import java.nio.file.StandardWatchEventKinds.*
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.regex.Pattern
 
+@Slf4j
 open class PathObservable(val dir: Path,
-                          val pattern: String = ".+",
-                          val recursive: Boolean = false
+                          val pattern: String = ALL_PATTERN,
+                          val recursive: Boolean = true
 ) {
     private val keys: MutableMap<WatchKey, Path> = Maps.newConcurrentMap()
 
-    fun create(): Observable<WatchEvent<*>> {
-        return Observable.create { subscriber: ObservableEmitter<WatchEvent<*>> ->
+    fun create(): Observable<WatchEventContext<*>> {
+        return Observable.create { subscriber: ObservableEmitter<WatchEventContext<*>> ->
             var errorFree = true
             dir.fileSystem.newWatchService().use { watcher ->
                 try {
@@ -38,7 +43,7 @@ open class PathObservable(val dir: Path,
                         break
                     }
                     key.pollEvents().forEach {
-                        subscriber.onNext(it)
+                        subscriber.onNext(WatchEventContext(event=it, dir=keys[key]))
                         keys[key]?.let { dir->registerNewDirectory(subscriber, dir, watcher, it) }
                     }
                     // reset key and remove from set if directory is no longer accessible
@@ -76,20 +81,21 @@ open class PathObservable(val dir: Path,
      */
     @Throws(IOException::class)
     private fun registerDirectory(dir: Path, watchService: WatchService) {
-        dir.takeIf { Files.isDirectory(it) || Pattern.matches(pattern, it.toString()) }
+        dir.takeIf { Files.isDirectory(it) || Pattern.matches(pattern, it.fileName.toString()) }
                 ?.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY)
                 ?.let { keys[it] = dir }
     }
 
     // register newly created directory to watching in recursive mode
     private fun registerNewDirectory(
-            subscriber: ObservableEmitter<WatchEvent<*>>,
+            subscriber: ObservableEmitter<WatchEventContext<*>>,
             dir: Path,
             watcher: WatchService,
             event: WatchEvent<*>) {
         val kind = event.kind()
         if (recursive && kind == ENTRY_CREATE) {
             // Context for directory entry event is the file name of entry
+            @Suppress("UNCHECKED_CAST")
             val eventWithPath = event as WatchEvent<Path>
             val child = dir.resolve(eventWithPath.context())
             try {
@@ -100,4 +106,10 @@ open class PathObservable(val dir: Path,
             }
         }
     }
+}
+
+fun <T> Observable<WatchEvent<T>>.log(log: Logger): Observable<WatchEvent<T>>{
+    return this.doOnNext { log.info("event type={}, event context={}", it.kind(), it.context()) }
+            .doOnComplete { log.info("task completed or exception happened!") }
+            .doOnError { log.error("error happened!", it) }
 }

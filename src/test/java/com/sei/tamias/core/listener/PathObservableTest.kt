@@ -1,9 +1,24 @@
 package com.sei.tamias.core.listener
 
+import com.sei.tamias.core.global.TEXT_PATTERN
+import com.sei.tamias.core.global.WatchEventContext
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.functions.Consumer
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.reactivestreams.Subscriber
 import org.springframework.boot.test.context.SpringBootTest
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.util.*
+import java.util.concurrent.BlockingQueue
+import java.util.concurrent.Executors
+import java.util.concurrent.LinkedBlockingQueue
+
+fun <T> T.println(){
+    println(this)
+}
 
 fun <T> Observable<T>.println() {
     this.subscribe { println(it) }
@@ -17,15 +32,19 @@ infix fun <T> T.shouldBe(other: T): Unit{
     assertEquals(this, other)
 }
 
+fun threadInfo(info: String){
+    "${Thread.currentThread().name},info=$info".println()
+}
+
 @SpringBootTest
-internal class PathObservableTest{
+internal class ObservableTest{
 
     @Test fun justTest(){
         val l = mutableListOf<Int>()
         val cache = Observable.just(1, 2, 3, 4, 5).cache()
         cache.println()
         cache.subscribe {l.add(it)}
-        l shouldBe listOf(1,2,3,4,5)
+        l shouldBe listOf(1, 2, 3, 4, 5)
     }
 
     /**
@@ -56,9 +75,58 @@ internal class PathObservableTest{
 
     }
 
+    @Test fun schedulerTest(){
+        Observable
+                .create<String> {
+                    for (i in 1..10) {
+                        it.onNext("RX_JAVA")
+                    }
+                    it.onComplete()
+                }
+                .subscribeOn(Schedulers.newThread())
+                .doOnSubscribe { threadInfo(".doOnSubscribe()-1") }
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe { threadInfo(".doOnSubscribe()-2") }
+                .observeOn(Schedulers.from(Executors.newCachedThreadPool(Executors.defaultThreadFactory())))
+                .subscribe {
+                    threadInfo(".onNext()")
+                    println("$it-onNext")
+                }
+        Thread.sleep(10000)
+    }
+
+    @Test fun schedulerTest2(){
+        Observable.just(1,2,3,4)
+                .flatMap { Observable.just(it*2) }
+                .doOnNext { threadInfo(it.toString()) }
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.io())
+                .subscribe { threadInfo(it.toString()) }
+
+        Thread.sleep(10000)
+    }
+
+
     @Test fun contactTest(){
 
     }
 
 
+}
+
+internal class PathObservableTest{
+    @Test
+    fun listenTest(){
+        val c = PathObservable(dir = Paths.get("/Users/gaoxiaodong/data"), pattern = TEXT_PATTERN).create()
+                .subscribeOn(Schedulers.single())
+                .doOnSubscribe { threadInfo(".doOnSubscribe()-1") }
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe { threadInfo(".doOnSubscribe()-2") }
+                .observeOn(Schedulers.from(Executors.newCachedThreadPool(Executors.defaultThreadFactory())))
+                .subscribe {
+                    threadInfo(".onNext()")
+                    println("$it-onNext")
+                }
+        //Thread.sleep(30000)
+    }
 }
