@@ -7,10 +7,10 @@ import org.aspectj.lang.annotation.Pointcut
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 
-@Component
-@Aspect
-@Slf4j
-@Order(1)
+//@Component
+//@Aspect
+//@Slf4j
+//@Order(1)
 open class MessageProcessor {
 
     @Pointcut(value = "@annotation(${MESSAGE_ANNOTATION})||@within(${MESSAGE_ANNOTATION})")

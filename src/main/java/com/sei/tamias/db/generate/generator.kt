@@ -49,7 +49,7 @@ object CodeGenerator {
 
         // 数据源配置
         val dsc = DataSourceConfig()
-        dsc.url = "jdbc:sqlite:identifier.sqlite"
+        dsc.url = "jdbc:sqlite:src/main/resources/db/test.db"
         // dsc.setSchemaName("public");
         dsc.driverName = "org.sqlite.JDBC"
         dsc.username = null

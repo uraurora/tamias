@@ -7,7 +7,22 @@ const val ALL_PATTERN: String = ".+"
 const val TEXT_PATTERN: String = "(.+)\\.txt"
 
 const val PICTURE_PATTERN: String = "(.+)\\.(png|jpe?g|bmp|gif|ico|pcx|tif|raw|tga)"
-// todo:视频和音乐文件正则待完善
-const val VEDIO_PATTERN: String = ".+/.text"
 
-const val MUSIC_PATTERN: String = ""
+const val VIDEO_PATTERN: String = "(.+)\\.(mpe?g|avi|rm(vb)?|mov|wmv|asf|dat)"
+
+const val MUSIC_PATTERN: String = "(.+)\\.(mp3|wma|rm|wav|mid)"
+
+/**
+ * 用户id信息
+ */
+const val USER_ID = "user_id"
+
+/**
+ * 用户认证信息
+ */
+const val AUTHORIZATION = "authorization"
+
+/**
+ * 用户鉴权信息
+ */
+const val AUTHENTICATION = "authentication"

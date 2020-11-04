@@ -9,6 +9,7 @@ import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.reactivestreams.Subscriber
 import org.springframework.boot.test.context.SpringBootTest
+import java.net.URLDecoder
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
@@ -106,9 +107,27 @@ internal class ObservableTest{
         Thread.sleep(10000)
     }
 
+    @Test fun schedulerTest3(){
+        val l = mutableListOf<Int>()
+        Observable.just(1,2,3,4)
+                .flatMap { Observable.just(it*2) }
+                .doOnNext { threadInfo(it.toString()) }
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.io())
+                .subscribe { l.add(it) }
+
+        Thread.sleep(10000)
+        println(l)
+    }
+
 
     @Test fun contactTest(){
 
+    }
+
+    @Test fun decodeTest(){
+        val s = URLDecoder.decode("dianping://web?url=https%3A%2F%2Fg.dianping.com%2Fapp%2Fapp-business-coupon-page%2Findex.html%3FlaunchId%3D10956384%26shopId%3DH3YEOaYbUYLGvbMP%26shopuuid%3D%23%26notitlebar%3D1&notitlebar=1", "utf-8")
+        print(s)
     }
 
 

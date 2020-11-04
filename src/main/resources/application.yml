@@ -2,7 +2,7 @@ server:
   port: 8989 # 端口号
 spring:
   datasource:
-    url: jdbc:sqlite:identifier.sqlite # 创建的sqlite数据库所在路径
+    url: jdbc:sqlite:src/main/resources/db/test.db # 创建的sqlite数据库所在路径
     username: # 因为没有用户名和密码，所以这两个参数就没有值
     password:
     driver-class-name: org.sqlite.JDBC # sqlite驱动
