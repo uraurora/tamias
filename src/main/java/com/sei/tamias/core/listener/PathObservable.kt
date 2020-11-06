@@ -20,8 +20,8 @@ open class PathObservable(val dir: Path,
 ) {
     private val keys: MutableMap<WatchKey, Path> = Maps.newConcurrentMap()
 
-    fun create(): Observable<WatchEventContext<*>> {
-        return Observable.create { subscriber: ObservableEmitter<WatchEventContext<*>> ->
+    fun create(): Observable<WatchEventContext<Path>> {
+        return Observable.create { subscriber: ObservableEmitter<WatchEventContext<Path>> ->
             var errorFree = true
             dir.fileSystem.newWatchService().use { watcher ->
                 try {
@@ -43,7 +43,9 @@ open class PathObservable(val dir: Path,
                         break
                     }
                     key.pollEvents().forEach {
-                        subscriber.onNext(WatchEventContext(event=it, dir=keys[key]))
+                        @Suppress("UNCHECKED_CAST")
+                        val event = it as WatchEvent<Path>
+                        subscriber.onNext(WatchEventContext(event=event, dir=keys[key]))
                         keys[key]?.let { dir->registerNewDirectory(subscriber, dir, watcher, it) }
                     }
                     // reset key and remove from set if directory is no longer accessible
@@ -88,7 +90,7 @@ open class PathObservable(val dir: Path,
 
     // register newly created directory to watching in recursive mode
     private fun registerNewDirectory(
-            subscriber: ObservableEmitter<WatchEventContext<*>>,
+            subscriber: ObservableEmitter<WatchEventContext<Path>>,
             dir: Path,
             watcher: WatchService,
             event: WatchEvent<*>) {

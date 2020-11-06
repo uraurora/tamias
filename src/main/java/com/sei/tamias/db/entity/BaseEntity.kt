@@ -3,7 +3,8 @@ package com.sei.tamias.db.entity
 /**
  * @program : tamias
  * @author : sei
- * @date : 2020-10-28 23:17
+ * @date : 2020-11-06 17:23
  * @description :
  */
-data class UserEntity(val id:Int, val score: Float, val data: Any)
+class BaseEntity(id: Long) {
+}

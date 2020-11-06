@@ -1,0 +1,46 @@
+package com.sei.tamias.db.entity;
+
+import java.time.LocalDate;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.sei.tamias.config.ConfigsKt;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * <p>
+ * 
+ * </p>
+ *
+ * @author sei
+ * @since 2020-11-06
+ */
+@Data
+@EqualsAndHashCode(callSuper = false)
+@TableName("date_test")
+public class DateTest implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @TableId(type = IdType.AUTO, value = "id")
+    private Integer id;
+
+    private String time = ConfigsKt.getDateTimeFormatter().format(LocalDateTime.now(ZoneId.of("+8")));
+
+    public int component1() {
+        return id;
+    }
+
+    @NotNull
+    public LocalDateTime component2() {
+        return LocalDateTime.parse(time, ConfigsKt.getDateTimeFormatter());
+    }
+}
