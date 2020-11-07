@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import static com.sei.tamias.core.global.ExtensionsKt.nowDateTimeString;
+
 /**
  * <p>
  * 
@@ -30,9 +32,9 @@ public class FileTagRelation implements Serializable {
 
     private Long tagId;
 
-    private String createTime;
+    private String createTime = nowDateTimeString();
 
-    private String updateTime;
+    private String updateTime = nowDateTimeString();
 
 
 }
