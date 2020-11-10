@@ -11,7 +11,9 @@ spring:
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*Mapper.xml # 配置mapper.xml文件路径
   type-aliases-package: com.sei.tamias.db.entity # 实体类包名
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
 # mybatis 打印SQL, 配置后就会在控制台打印执行的SQL语句
 logging:
   level:
-    com.sei.tamias.db.dao: debug
+    com.sei.tamias.db.mapper: debug

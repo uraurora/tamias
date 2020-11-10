@@ -1,6 +1,7 @@
 package com.sei.tamias.core.global
 
 import com.sei.tamias.config.dateTimeFormatter
+import com.sei.tamias.util.Options
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -19,4 +20,12 @@ fun <K, V> Map<K, V>.toPair(): List<Pair<K, V>>{
 
 fun nowDateTimeString(): String{
     return dateTimeFormatter.format(LocalDateTime.now(ZoneOffset.of("+8")))
+}
+
+fun <E> Collection<E>.limit(limit: Int): List<E> {
+    return Options.limitedListOf(this, limit)
+}
+
+fun <E> List<E>.limitWithRemoveFirst(limit:Int): List<E>{
+    return Options.limitedListWithRemoveFirstOf(this, limit)
 }

@@ -34,4 +34,28 @@ public interface IFileInfoService extends IService<FileInfo> {
     Map<Long, List<FileInfo>> mapByTagIds(Collection<? extends Long> ids);
 
     Map<Long, List<FileInfo>> mapByTags(Collection<? extends FileTag> ids);
+
+    /**
+     * 对指定文件添加标签
+     * @param fileId 文件id
+     * @param tag 标签信息
+     * @return 是否成功
+     */
+    boolean addTag(Long fileId, FileTag tag);
+
+    /**
+     * 对指定文件添加标签列表
+     * @param fileId 文件id
+     * @param tags 标签列表信息
+     * @return 是否成功
+     */
+    boolean addTags(Long fileId, List<FileTag> tags);
+
+    /**
+     * 对指定文件添加标签列表
+     * @param fileId 文件id
+     * @param tags 标签列表信息
+     * @return 是否成功
+     */
+    boolean addTags(Long fileId, FileTag... tags);
 }

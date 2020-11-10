@@ -36,5 +36,11 @@ public class FileTagRelation implements Serializable {
 
     private String updateTime = nowDateTimeString();
 
+    public static FileTagRelation from(Long fileId, Long tagId){
+        return new FileTagRelation()
+                .setFileId(fileId)
+                .setTagId(tagId);
+    }
+
 
 }
