@@ -9,8 +9,8 @@ import java.util.function.*;
 import java.util.stream.Collectors;
 
 /**
- * @author : gaoxiaodong04
- * @program : wedding-mobileapi-web
+ * @author : gaoxiaodong
+ * @program : tamias
  * @date : 2020-09-15 15:56
  * @description : 包含常用方法的静态调用、封装的高阶函数 和能够链式调用处理非空对象的包装类
  */
@@ -44,7 +44,7 @@ public abstract class Options {
 
     //<editor-fold desc="高阶函数">
     /**
-     * 功能类似kotlin中的let，接受一个T类型的接受者，如果其为null则返回null
+     * 功能类似kotlin中的with，接受一个T类型的接受者，如果其为null则返回null
      * 不为空则返回func函数执行后的结果
      * @param object 接受者类型
      * @param func 函数
@@ -52,7 +52,7 @@ public abstract class Options {
      * @param <R> 返回类型
      * @return 处理后的结果
      */
-    public static  <T, R> R map(T object, Function<? super T, R> func){
+    public static  <T, R> R map(T object, Function<? super T, ? extends R> func){
         return object != null ? func.apply(object) : null;
     }
 
