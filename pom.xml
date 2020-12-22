@@ -22,6 +22,8 @@
         <sqlite-jdbc.version>3.32.3.2</sqlite-jdbc.version>
         <mybatis-plus.version>3.4.0</mybatis-plus.version>
         <disruptor.version>3.4.2</disruptor.version>
+        <joor.version>0.9.13</joor.version>
+        <byte-buddy.version>1.10.18</byte-buddy.version>
     </properties>
 
     <dependencies>
@@ -103,6 +105,27 @@
             <artifactId>guava</artifactId>
             <version>28.2-jre</version>
         </dependency>
+        <!--    反射库    -->
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>joor-java-8</artifactId>
+            <version>${joor.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy -->
+        <!--    字节码修改工具    -->
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>${byte-buddy.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy-agent</artifactId>
+            <version>${byte-buddy.version}</version>
+        </dependency>
+
+
         <!--    concurrent ring queue    -->
         <dependency>
             <groupId>com.lmax</groupId>
