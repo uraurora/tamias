@@ -19,5 +19,5 @@ class AppContext: MutableMap<String, Any> by context.get(){
 /**
  * 文件变更上下文数据类，包含文件变更类型，文件名，时间，和具体路径
  */
-data class WatchEventContext<T>(val event: WatchEvent<T>, val dir: Path?, val datetime: LocalDateTime = LocalDateTime.now())
+data class WatchEventContext<T>(var event: WatchEvent<T>?, var dir: Path?, var datetime: LocalDateTime = LocalDateTime.now())
 

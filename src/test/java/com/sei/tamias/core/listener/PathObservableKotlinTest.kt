@@ -1,5 +1,6 @@
 package com.sei.tamias.core.listener
 
+import com.sei.tamias.core.file.PathObservableKotlin
 import com.sei.tamias.core.global.TEXT_PATTERN
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -7,12 +8,8 @@ import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.boot.test.context.SpringBootTest
 import java.net.URLDecoder
-import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.*
-import java.util.concurrent.BlockingQueue
 import java.util.concurrent.Executors
-import java.util.concurrent.LinkedBlockingQueue
 
 fun <T> T.println(){
     println(this)
@@ -130,10 +127,10 @@ internal class ObservableTest{
 
 }
 
-internal class PathObservableTest{
+internal class PathObservableKotlinTest{
     @Test
     fun listenTest(){
-        val c = PathObservable(dir = Paths.get("/Users/gaoxiaodong/data"), pattern = TEXT_PATTERN).create()
+        val c = PathObservableKotlin(dir = Paths.get("/Users/gaoxiaodong/data"), pattern = TEXT_PATTERN).create()
                 .subscribeOn(Schedulers.single())
                 .doOnSubscribe { threadInfo(".doOnSubscribe()-1") }
                 .subscribeOn(Schedulers.io())

@@ -1,4 +1,4 @@
-package com.sei.tamias.core.listener
+package com.sei.tamias.core.file
 
 import com.google.common.collect.Maps
 import com.sei.tamias.core.global.ALL_PATTERN
@@ -14,9 +14,9 @@ import java.nio.file.attribute.BasicFileAttributes
 import java.util.regex.Pattern
 
 @Slf4j
-open class PathObservable(val dir: Path,
-                          val pattern: String = ALL_PATTERN,
-                          val recursive: Boolean = true
+open class PathObservableKotlin(val dir: Path,
+                                val pattern: String = ALL_PATTERN,
+                                val recursive: Boolean = true
 ) {
     private val keys: MutableMap<WatchKey, Path> = Maps.newConcurrentMap()
 

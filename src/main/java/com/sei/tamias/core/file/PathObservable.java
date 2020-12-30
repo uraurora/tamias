@@ -1,6 +1,7 @@
-package com.sei.tamias;
+package com.sei.tamias.core.file;
 
 import com.google.common.collect.Maps;
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -19,23 +21,18 @@ import static java.nio.file.StandardWatchEventKinds.*;
  * @description :
  */
 @Slf4j
-public class PathObservable {
-
-    private final Path directory;
-
-    private final boolean recursive;
-
-    /**
-     * 保存watchKey对根目录下所有监听目录的映射，用来快速组合文件的目录
-     */
-    private final Map<WatchKey, Path> keys = Maps.newConcurrentMap();
+public class PathObservable extends AbstractPathListener{
 
     private PathObservable(PathObservableBuilder builder){
         this.directory = builder.directory;
         this.recursive = builder.recursive;
     }
 
-    private Observable<WatchEvent<?>> create(){
+    /**
+     * 返回Observable，见{@link Observable}，subscriber是文件变更发射的事件
+     * @return Observable
+     */
+    public Observable<WatchEvent<Path>> toObservable(){
         return Observable.create(subscriber->{
             boolean errorFree = true;
             try(WatchService watcher = directory.getFileSystem().newWatchService()) {
@@ -64,7 +61,9 @@ public class PathObservable {
                     }
                     final Path dir = keys.get(key);
                     for (final WatchEvent<?> event : key.pollEvents()) {
-                        subscriber.onNext(event);
+                        @SuppressWarnings("unchecked")
+                        final WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
+                        subscriber.onNext(pathEvent);
                         registerNewDirectory(subscriber, dir, watcher, event);
                     }
                     // reset key and remove from set if directory is no longer accessible
@@ -106,65 +105,9 @@ public class PathObservable {
         }
 
 
-        public Observable<WatchEvent<?>> build() {
-            return new PathObservable(this).create();
+        public PathObservable build() {
+            return new PathObservable(this);
         }
     }
 
-    /**
-     * 递归文件子目录注册监听事件
-     * @param path 根目录
-     * @param watchService watchService
-     * @throws IOException io异常
-     */
-    private void registerDirectories(Path path, WatchService watchService) throws IOException {
-        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                registerDirectory(dir, watchService);
-                return FileVisitResult.CONTINUE;
-            }
-        });
-    }
-
-    /**
-     * 指定文件注册监听事件：创建、删除和修改
-     * @param dir 目标文件路径
-     * @param watchService watcher
-     * @throws IOException io异常
-     */
-    private void registerDirectory(final Path dir, final WatchService watchService) throws IOException {
-        final WatchKey key = dir.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-        keys.put(key, dir);
-    }
-
-    // register newly created directory to watching in recursive mode
-    private void registerNewDirectory(
-            final ObservableEmitter<WatchEvent<?>> subscriber,
-            final Path dir,
-            final WatchService watcher,
-            final WatchEvent<?> event) {
-        final WatchEvent.Kind<?> kind = event.kind();
-        if (recursive && kind.equals(ENTRY_CREATE)) {
-            // Context for directory entry event is the file name of entry
-            @SuppressWarnings("unchecked")
-            final WatchEvent<Path> eventWithPath = (WatchEvent<Path>) event;
-            final Path child = dir.resolve(eventWithPath.context());
-            try {
-                if (Files.isDirectory(child, LinkOption.NOFOLLOW_LINKS)) {
-                    registerDirectories(child, watcher);
-                }
-            } catch (final IOException exception) {
-                subscriber.onError(exception);
-                log.error("文件监听注册异常", exception);
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        PathObservable.builder()
-                .withDirectory(Paths.get(""))
-                .withRecursive()
-                .build();
-    }
 }

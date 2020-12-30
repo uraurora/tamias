@@ -10,6 +10,7 @@ import java.nio.file.attribute.BasicFileAttributes
 import java.util.regex.Pattern
 
 /**
+ * 搜索dir路劲下的所有文件，但不包含子目录的文件
  * [dir]: 文件路径
  * [pattern]: 文件名正则
  * [filter]: 过滤器
@@ -26,6 +27,7 @@ fun search(dir: Path, pattern: String = ALL_PATTERN, filter: (Path) -> Boolean =
 }
 
 /**
+ * 递归搜索dir目录下的文件，包括子目录下的文件
  * [dir]: 文件路径
  * [pattern]: 文件名正则
  * [filter]: 过滤器
