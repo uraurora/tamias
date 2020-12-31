@@ -1,6 +1,5 @@
-package com.sei.tamias.core.listener
+package com.sei.tamias.core.file
 
-import com.sei.tamias.core.file.PathObservableKotlin
 import com.sei.tamias.core.global.TEXT_PATTERN
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -140,6 +139,6 @@ internal class PathObservableKotlinTest{
                     threadInfo(".onNext()")
                     println("$it-onNext")
                 }
-        //Thread.sleep(30000)
+        Thread.sleep(30000)
     }
 }

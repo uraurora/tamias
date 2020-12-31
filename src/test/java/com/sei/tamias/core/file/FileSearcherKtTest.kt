@@ -2,9 +2,7 @@ package com.sei.tamias.core.file
 
 import com.sei.tamias.core.global.PICTURE_PATTERN
 import com.sei.tamias.core.global.TEXT_PATTERN
-import com.sei.tamias.core.listener.shouldBe
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
 import java.nio.file.Paths
 import java.util.regex.Pattern
 

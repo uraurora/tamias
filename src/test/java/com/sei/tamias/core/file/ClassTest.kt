@@ -1,7 +1,6 @@
 package com.sei.tamias.core.file
 
 import com.google.common.collect.Iterables
-import com.sei.tamias.core.listener.println
 import org.junit.jupiter.api.Test
 
 /**

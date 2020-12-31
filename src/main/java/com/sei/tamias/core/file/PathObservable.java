@@ -1,6 +1,7 @@
 package com.sei.tamias.core.file;
 
 import com.google.common.collect.Maps;
+import com.sei.tamias.core.global.WatchEventContext;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -32,7 +34,7 @@ public class PathObservable extends AbstractPathListener{
      * 返回Observable，见{@link Observable}，subscriber是文件变更发射的事件
      * @return Observable
      */
-    public Observable<WatchEvent<Path>> toObservable(){
+    public Observable<WatchEventContext<Path>> toObservable(){
         return Observable.create(subscriber->{
             boolean errorFree = true;
             try(WatchService watcher = directory.getFileSystem().newWatchService()) {
@@ -63,8 +65,12 @@ public class PathObservable extends AbstractPathListener{
                     for (final WatchEvent<?> event : key.pollEvents()) {
                         @SuppressWarnings("unchecked")
                         final WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
-                        subscriber.onNext(pathEvent);
-                        registerNewDirectory(subscriber, dir, watcher, event);
+                        final WatchEventContext<Path> contextEvent = new WatchEventContext<>();
+                        contextEvent.setEvent(pathEvent);
+                        contextEvent.setDir(pathEvent.context());
+
+                        subscriber.onNext(contextEvent);
+                        registerNewDirectory(subscriber, dir, watcher, contextEvent);
                     }
                     // reset key and remove from set if directory is no longer accessible
                     if (!key.reset()) {
@@ -89,7 +95,7 @@ public class PathObservable extends AbstractPathListener{
 
     public static final class PathObservableBuilder {
         private Path directory;
-        private boolean recursive = false;
+        private boolean recursive = true;
 
         private PathObservableBuilder() {
         }

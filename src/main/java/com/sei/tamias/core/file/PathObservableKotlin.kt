@@ -45,7 +45,12 @@ open class PathObservableKotlin(val dir: Path,
                     key.pollEvents().forEach {
                         @Suppress("UNCHECKED_CAST")
                         val event = it as WatchEvent<Path>
-                        subscriber.onNext(WatchEventContext(event=event, dir=keys[key]))
+                        val contextEvent = WatchEventContext<Path>().apply {
+                            setEvent(event)
+                            setDir(keys[key])
+                        }
+
+                        subscriber.onNext(contextEvent)
                         keys[key]?.let { dir->registerNewDirectory(subscriber, dir, watcher, it) }
                     }
                     // reset key and remove from set if directory is no longer accessible

@@ -1,7 +1,6 @@
 package com.sei.tamias.db.service
 
 import com.sei.tamias.TamiasApplication
-import com.sei.tamias.core.listener.println
 import com.sei.tamias.db.entity.DateTest
 import org.junit.Test
 import org.junit.runner.RunWith

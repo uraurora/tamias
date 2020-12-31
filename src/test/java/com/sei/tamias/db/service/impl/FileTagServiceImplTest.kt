@@ -1,17 +1,14 @@
 package com.sei.tamias.db.service.impl
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers
-import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.sei.tamias.TamiasApplication
-import com.sei.tamias.core.listener.println
-import com.sei.tamias.core.listener.shouldBe
+import com.sei.tamias.core.file.println
+import com.sei.tamias.core.file.shouldBe
 import com.sei.tamias.db.entity.FileInfo
 import com.sei.tamias.db.entity.FileTag
 import com.sei.tamias.db.service.IFileInfoService
 import com.sei.tamias.db.service.IFileTagService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import javax.annotation.Resource

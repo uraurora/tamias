@@ -1,6 +1,7 @@
 package com.sei.tamias.core.file;
 
 import com.google.common.collect.Maps;
+import com.sei.tamias.core.global.WatchEventContext;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.ObservableEmitter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
@@ -71,25 +73,25 @@ public abstract class AbstractPathListener {
      * @param subscriber 生产者
      * @param dir 目录地址
      * @param watcher watchService，见{@link WatchService}
-     * @param event 文件变动事件，见{@link WatchEvent<Path>}
+     * @param event 文件变动事件，见{@link WatchEventContext<Path>}
      */
     protected void registerNewDirectory(
-            final @NonNull ObservableEmitter<WatchEvent<Path>> subscriber,
+            final ObservableEmitter<WatchEventContext<Path>> subscriber,
             final Path dir,
             final WatchService watcher,
-            final WatchEvent<?> event) {
-        final WatchEvent.Kind<?> kind = event.kind();
+            final WatchEventContext<Path> event) {
+        final WatchEvent.Kind<?> kind = Objects.requireNonNull(event.getEvent()).kind();
         if (recursive && kind.equals(ENTRY_CREATE)) {
             // Context for directory entry event is the file name of entry
-            @SuppressWarnings("unchecked")
-            final WatchEvent<Path> eventWithPath = (WatchEvent<Path>) event;
-            final Path child = dir.resolve(eventWithPath.context());
+            final Path child = dir.resolve(event.getEvent().context());
             try {
                 if (Files.isDirectory(child, LinkOption.NOFOLLOW_LINKS)) {
                     registerDirectories(child, watcher);
                 }
             } catch (final IOException exception) {
-                subscriber.onError(exception);
+                if(subscriber != null){
+                    subscriber.onError(exception);
+                }
                 log.error("文件监听注册异常", exception);
             }
         }
