@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import static com.sei.tamias.core.global.ConstantsKt.ALL_PATTERN;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 /**
@@ -28,6 +29,7 @@ public class PathObservable extends AbstractPathListener{
     private PathObservable(PathObservableBuilder builder){
         this.directory = builder.directory;
         this.recursive = builder.recursive;
+        this.pattern = builder.pattern;
     }
 
     /**
@@ -96,6 +98,10 @@ public class PathObservable extends AbstractPathListener{
     public static final class PathObservableBuilder {
         private Path directory;
         private boolean recursive = true;
+        /**
+         * 文件名正则
+         */
+        private String pattern = ALL_PATTERN;
 
         private PathObservableBuilder() {
         }
@@ -107,6 +113,11 @@ public class PathObservable extends AbstractPathListener{
 
         public PathObservableBuilder withRecursive() {
             this.recursive = true;
+            return this;
+        }
+
+        public PathObservableBuilder withPattern(String pattern) {
+            this.pattern = pattern;
             return this;
         }
 

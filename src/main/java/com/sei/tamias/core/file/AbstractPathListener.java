@@ -11,6 +11,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
@@ -32,6 +33,11 @@ public abstract class AbstractPathListener {
      * 是否递归
      */
     protected boolean recursive;
+
+    /**
+     * 文件匹配正则
+     */
+    protected String pattern;
 
     /**
      * 保存watchKey对根目录下所有监听目录的映射，用来快速组合文件的目录
@@ -64,8 +70,10 @@ public abstract class AbstractPathListener {
      * @throws IOException io异常
      */
     protected void registerDirectory(final Path dir, final WatchService watchService) throws IOException {
-        final WatchKey key = dir.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-        keys.put(key, dir);
+        if(Files.isDirectory(dir) || Pattern.matches(pattern, dir.getFileName().toString())){
+            final WatchKey key = dir.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+            keys.put(key, dir);
+        }
     }
 
     /**

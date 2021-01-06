@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static com.sei.tamias.core.global.ConstantsKt.ALL_PATTERN;
 import static com.sei.tamias.util.Options.*;
 
 /**
@@ -38,6 +39,7 @@ public final class PathDisruptor extends AbstractPathListener{
         this.ringBufferSize = builder.ringBufferSize;
         this.directory = builder.directory;
         this.recursive = builder.recursive;
+        this.pattern = builder.pattern;
         if(directory == null || !Files.isDirectory(directory)){
             throw new IllegalArgumentException("the directory should not be null or file");
         }
@@ -77,6 +79,16 @@ public final class PathDisruptor extends AbstractPathListener{
          */
         private boolean recursive = true;
 
+        /**
+         * 文件名正则
+         */
+        private String pattern = ALL_PATTERN;
+
+        /**
+         * 见{@link EventHandler}
+         * @param handlers 消费者处理者
+         * @return 返回构建者本身
+         */
         public PathDisruptorBuilder withHandlers(List<EventHandler<WatchEventContext<Path>>> handlers) {
             this.handlers.addAll(handlers);
             return this;
@@ -88,6 +100,11 @@ public final class PathDisruptor extends AbstractPathListener{
             return this;
         }
 
+        /**
+         * 见{@link EventHandler}
+         * @param handler 消费者处理者
+         * @return 返回构建者本身
+         */
         public final PathDisruptorBuilder withHandler(EventHandler<WatchEventContext<Path>> handler) {
             this.handlers.add(handler);
             return this;
@@ -103,6 +120,11 @@ public final class PathDisruptor extends AbstractPathListener{
             return this;
         }
 
+        /**
+         * 是否递归监听文件
+         * @param recursive 是否递归
+         * @return builder
+         */
         public PathDisruptorBuilder withRecursive(boolean recursive) {
             this.recursive = recursive;
             return this;
@@ -113,6 +135,10 @@ public final class PathDisruptor extends AbstractPathListener{
             return this;
         }
 
+        public PathDisruptorBuilder withPattern(String pattern) {
+            this.pattern = pattern;
+            return this;
+        }
 
 
         public PathDisruptor build(){
@@ -180,10 +206,18 @@ public final class PathDisruptor extends AbstractPathListener{
         this.disruptor.shutdown();
     }
 
+    /**
+     * 等待策略，具体见{@link WaitStrategy}
+     * @return 等待策略
+     */
     public WaitStrategy getWaitStrategy() {
         return waitStrategy;
     }
 
+    /**
+     * 获取环形队列的大小，见{@link PathDisruptor#ringBufferSize}
+     * @return 环形队列大小
+     */
     public int getRingBufferSize() {
         return ringBufferSize;
     }
