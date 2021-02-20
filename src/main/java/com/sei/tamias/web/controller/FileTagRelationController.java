@@ -1,9 +1,11 @@
-package com.sei.tamias.db.controller;
+package com.sei.tamias.web.controller;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-11-06
  */
 @RestController
-@RequestMapping("/db/file-info")
-public class FileInfoController {
+@RequestMapping("/db/file-tag-relation")
+public class FileTagRelationController {
+    public static void main(String[] args) throws IOException {
+    }
 
 }

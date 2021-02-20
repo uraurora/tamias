@@ -1,6 +1,6 @@
 package com.sei.tamias.core.file
 
-import com.sei.tamias.core.global.TEXT_PATTERN
+import com.sei.tamias.global.TEXT_PATTERN
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.Test

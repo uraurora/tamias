@@ -1,6 +1,6 @@
 package com.sei.tamias.db.entity
 
-import com.sei.tamias.core.global.nowDateTimeString
+import com.sei.tamias.global.nowDateTimeString
 
 /**
  * @program : tamias

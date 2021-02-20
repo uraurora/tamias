@@ -1,7 +1,7 @@
 package com.sei.tamias.db.cache;
 
 import com.sei.tamias.db.entity.FileTagRelation;
-import com.sei.tamias.db.service.IFileTagRelationService;
+import com.sei.tamias.service.IFileTagRelationService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

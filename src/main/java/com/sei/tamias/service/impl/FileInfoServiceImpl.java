@@ -1,4 +1,4 @@
-package com.sei.tamias.db.service.impl;
+package com.sei.tamias.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Sets;
@@ -9,15 +9,13 @@ import com.sei.tamias.db.entity.FileInfo;
 import com.sei.tamias.db.entity.FileTag;
 import com.sei.tamias.db.entity.FileTagRelation;
 import com.sei.tamias.db.mapper.FileInfoMapper;
-import com.sei.tamias.db.service.IFileInfoService;
-import com.sei.tamias.db.service.IFileTagRelationService;
-import com.sei.tamias.db.service.IFileTagService;
-import lombok.val;
+import com.sei.tamias.service.IFileInfoService;
+import com.sei.tamias.service.IFileTagRelationService;
+import com.sei.tamias.service.IFileTagService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.sei.tamias.util.Options.*;
 import static java.util.stream.Collectors.*;
@@ -38,13 +36,8 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
     private IFileTagService tagService;
 
     @Resource
-    private TagCache tagCache;
+    private IFileInfoService fileInfoService;
 
-    @Resource
-    private FileCache fileCache;
-
-    @Resource
-    private FileTagRelationCache relationCache;
 
     @Override
     public List<FileInfo> listByFileInfo(FileTag tag) {
@@ -77,24 +70,25 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
     @Override
     public boolean addTag(Long fileId, FileTag tag) {
         return Option.of(fileId)
-                .map(fileCache::query)
+                .map(fileInfoService::getById)
                 .map(fileInfo -> {
-                    if(tag == null || tag.getId() == null){
+                    if(fileInfo == null){
                         return false;
-                    }
-                    FileTag byId = tagCache.query(tag.getId());
-                    // 说明库中没有此标签，添加标签后绑定
-                    if(byId == null){
-                        // 存储后实体类中会置id信息
-                        tagService.save(tag);
-                        relationService.save(FileTagRelation.from(fileId, tag.getId()));
                     }else{
+                        // 如果tag为null，返回false
+                        if(tag == null){
+                            return false;
+                        }
+                        // 如果id为null，先存储tag信息
+                        if(tag.getId() == null){
+                            tagService.save(tag);
+                        }
                         // 有标签，有文件，则判断关系表中是否有对应记录
-                        if(relationCache.isRelated(fileId, tag.getId())){
+                        if(tag.getId() != null && !relationService.isRelated(fileId, tag.getId())){
                             relationService.save(FileTagRelation.from(fileId, tag.getId()));
                         }
+                        return true;
                     }
-                    return true;
                 })
                 .getOrDefault(false);
 
@@ -103,37 +97,53 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
     @Override
     public boolean addTags(Long fileId, List<FileTag> tags) {
         return Option.of(fileId)
-                .map(fileCache::query)
+                .map(fileInfoService::getById)
                 .map(fileInfo -> {
-                    if(isEmpty(tags)){
+                    if(isEmpty(tags) || fileInfo == null){
                         return false;
                     }
-                    Set<Long> ids = tags.stream().map(FileTag::getId).collect(toSet());
-                    // 表里已经有的标签
-                    final Set<Long> fileTagIds = tagService.listByIds(ids).stream()
-                            .filter(Objects::nonNull)
-                            .map(FileTag::getId)
+                    final Set<FileTag> nullIdTags = tags.stream()
+                            .filter(tag -> tag != null && tag.getId() == null)
                             .collect(toSet());
-                    final Set<Long> needSaveTagIds = Sets.difference(ids, fileTagIds);
-                    final Set<FileTag> needSaveTags = tags.stream().filter(t->ids.contains(t.getId())).collect(toSet());
+                    tagService.saveBatch(nullIdTags);
 
-
-                    // 这些是需要新增
-                    final List<FileTagRelation> relations = fileTagIds.stream()
-                            .filter(Objects::nonNull)
-                            .map(it->new FileTagRelation().setFileId(fileId).setTagId(it))
+                    final List<FileTagRelation> relations = tags.stream()
+                            .filter(tag->tag != null && tag.getId() != null)
+                            .map(tag->FileTagRelation.from(fileId, tag.getId()))
                             .collect(toList());
-                    if(isNotEmpty(needSaveTagIds)){
-                        tagService.saveBatch(needSaveTags);
-                        // todo:
-                    }
+                    relationService.saveBatch(relations);
                     return true;
                 })
                 .getOrDefault(false);
     }
 
     @Override
-    public boolean addTags(Long fileId, FileTag... tags) {
-        return addTags(fileId, listOf(tags));
+    public boolean removeTag(Long fileId, Long tagId) {
+        return Option.of(fileId)
+                .map(fileInfoService::getById)
+                .map(fileInfo -> {
+                    if(fileInfo == null){
+                        return false;
+                    }else{
+                        final List<Long> relationIds = relationService.lambdaQuery()
+                                .eq(FileTagRelation::getTagId, tagId)
+                                .list().stream()
+                                .map(FileTagRelation::getId)
+                                .collect(toList());
+                        relationService.removeByIds(relationIds);
+                        return true;
+                    }
+                })
+                .getOrDefault(false);
     }
+
+    @Override
+    public boolean removeTags(Long fileId, Collection<? extends Long> tagId) {
+        return false;
+    }
+
+    private void notSupported() throws IllegalAccessException {
+        throw new IllegalAccessException("not supported yet!");
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.sei.tamias.core.file
 
-import com.sei.tamias.core.global.ALL_PATTERN
+import com.sei.tamias.global.ALL_PATTERN
 import java.io.IOException
 import java.nio.file.FileVisitResult
 import java.nio.file.Files

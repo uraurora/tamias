@@ -2,6 +2,7 @@ package com.sei.tamias.db.service
 
 import com.sei.tamias.TamiasApplication
 import com.sei.tamias.db.entity.DateTest
+import com.sei.tamias.service.IDateTestService
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.context.SpringBootTest
@@ -13,7 +14,7 @@ import javax.annotation.Resource
 internal class IDateTestServiceTest{
 
     @Resource
-    lateinit var dateService:IDateTestService
+    lateinit var dateService: IDateTestService
 
     @Test
     fun insertTest(){

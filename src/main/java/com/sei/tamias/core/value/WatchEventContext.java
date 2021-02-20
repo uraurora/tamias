@@ -1,6 +1,4 @@
-package com.sei.tamias.core.global;
-
-import lombok.Data;
+package com.sei.tamias.core.value;
 
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;

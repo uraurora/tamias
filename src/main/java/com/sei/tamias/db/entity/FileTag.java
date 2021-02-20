@@ -6,10 +6,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import static com.sei.tamias.core.global.ExtensionsKt.nowDateTimeString;
+import static com.sei.tamias.global.ExtensionsKt.nowDateTimeString;
 
 /**
  * <p>

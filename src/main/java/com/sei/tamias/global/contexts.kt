@@ -1,8 +1,4 @@
-package com.sei.tamias.core.global
-
-import java.nio.file.Path
-import java.nio.file.WatchEvent
-import java.time.LocalDateTime
+package com.sei.tamias.global
 
 /**
  * app的全局属性参数存放，全局单例，使用INSTANCE来进行操作

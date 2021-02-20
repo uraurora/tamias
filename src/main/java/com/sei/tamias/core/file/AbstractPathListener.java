@@ -1,8 +1,7 @@
 package com.sei.tamias.core.file;
 
 import com.google.common.collect.Maps;
-import com.sei.tamias.core.global.WatchEventContext;
-import io.reactivex.rxjava3.annotations.NonNull;
+import com.sei.tamias.core.value.WatchEventContext;
 import io.reactivex.rxjava3.core.ObservableEmitter;
 import lombok.extern.slf4j.Slf4j;
 

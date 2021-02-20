@@ -2,7 +2,7 @@ package com.sei.tamias.db.cache;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.sei.tamias.db.entity.FileTag;
-import com.sei.tamias.db.service.IFileTagService;
+import com.sei.tamias.service.IFileTagService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

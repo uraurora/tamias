@@ -1,4 +1,4 @@
-package com.sei.tamias.db.controller;
+package com.sei.tamias.web.controller;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-11-06
  */
 @RestController
-@RequestMapping("/db/date-test")
-public class DateTestController {
+@RequestMapping("/db/file-info")
+public class FileInfoController {
 
 }

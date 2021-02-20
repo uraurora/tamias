@@ -1,6 +1,4 @@
-package com.sei.tamias.core.global
-
-import java.util.regex.Pattern
+package com.sei.tamias.global
 
 const val ALL_PATTERN: String = ".+"
 

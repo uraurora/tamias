@@ -1,4 +1,4 @@
-package com.sei.tamias.db.service;
+package com.sei.tamias.service;
 
 import com.sei.tamias.db.entity.FileInfo;
 import com.sei.tamias.db.entity.FileTag;

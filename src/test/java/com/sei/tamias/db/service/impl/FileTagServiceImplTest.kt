@@ -5,8 +5,8 @@ import com.sei.tamias.core.file.println
 import com.sei.tamias.core.file.shouldBe
 import com.sei.tamias.db.entity.FileInfo
 import com.sei.tamias.db.entity.FileTag
-import com.sei.tamias.db.service.IFileInfoService
-import com.sei.tamias.db.service.IFileTagService
+import com.sei.tamias.service.IFileInfoService
+import com.sei.tamias.service.IFileTagService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest

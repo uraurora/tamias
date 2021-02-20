@@ -1,13 +1,11 @@
 package com.sei.tamias.core.file;
 
 import com.lmax.disruptor.EventHandler;
-import com.sei.tamias.core.global.WatchEventContext;
+import com.sei.tamias.core.value.WatchEventContext;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PathDisruptorTest {
 

@@ -1,14 +1,13 @@
-package com.sei.tamias.db.service.impl;
+package com.sei.tamias.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sei.tamias.db.entity.FileInfo;
 import com.sei.tamias.db.entity.FileTag;
 import com.sei.tamias.db.entity.FileTagRelation;
 import com.sei.tamias.db.mapper.FileTagMapper;
-import com.sei.tamias.db.service.IFileTagRelationService;
-import com.sei.tamias.db.service.IFileTagService;
+import com.sei.tamias.service.IFileTagRelationService;
+import com.sei.tamias.service.IFileTagService;
 import kotlin.Pair;
-import lombok.val;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 

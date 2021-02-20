@@ -1,4 +1,4 @@
-package com.sei.tamias.db.service;
+package com.sei.tamias.service;
 
 import com.sei.tamias.db.entity.FileInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -7,6 +7,8 @@ import com.sei.tamias.db.entity.FileTag;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import static com.sei.tamias.util.Options.*;
 
 /**
  * <p>
@@ -57,5 +59,14 @@ public interface IFileInfoService extends IService<FileInfo> {
      * @param tags 标签列表信息
      * @return 是否成功
      */
-    boolean addTags(Long fileId, FileTag... tags);
+    default boolean addTags(Long fileId, FileTag... tags){
+        return addTags(fileId, listOf(tags));
+    }
+
+
+    boolean removeTag(Long fileId, Long tagId);
+
+    boolean removeTags(Long fileId, Collection<? extends Long> tagId);
+
+
 }

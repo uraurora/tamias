@@ -1,4 +1,4 @@
-package com.sei.tamias.config
+package com.sei.tamias.global
 
 import java.time.format.DateTimeFormatter
 

@@ -2,11 +2,9 @@ package com.sei.tamias.core.enums;
 
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.sei.tamias.util.Options;
 import lombok.Getter;
-import org.springframework.http.HttpEntity;
 
-import static com.sei.tamias.core.global.ConstantsKt.*;
+import static com.sei.tamias.global.ConstantsKt.*;
 import static com.sei.tamias.util.Options.Option;
 
 @Getter

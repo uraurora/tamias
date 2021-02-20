@@ -1,8 +1,8 @@
-package com.sei.tamias.db.service.impl;
+package com.sei.tamias.service.impl;
 
 import com.sei.tamias.db.entity.ListenerGroup;
 import com.sei.tamias.db.mapper.ListenerGroupMapper;
-import com.sei.tamias.db.service.IListenerGroupService;
+import com.sei.tamias.service.IListenerGroupService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
