@@ -1,7 +1,7 @@
 package com.sei.tamias.util;
 
 import com.google.common.collect.*;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.lang.NonNull;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -619,7 +619,7 @@ public abstract class Options {
         }
 
         @Override
-        public boolean add(@NotNull E element) {
+        public boolean add(@NonNull E element) {
             if(removeFirst){
                 if (delegate.size() + 1 > limit){
                     delegate.removeFirst();
@@ -655,7 +655,7 @@ public abstract class Options {
         }
 
         @Override
-        public V put(@NotNull K key, @NotNull V value) {
+        public V put(@NonNull K key, @NonNull V value) {
             if (delegate.containsKey(key) || delegate.size() + 1 <= limit) {
                 return delegate.put(key, value);
             }

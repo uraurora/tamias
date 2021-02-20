@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import static com.sei.tamias.global.ExtensionsKt.nowDateTimeString;
+import static com.sei.tamias.global.constnts.Constants.nowDateTimeString;
 
 /**
  * <p>

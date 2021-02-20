@@ -4,7 +4,7 @@ package com.sei.tamias.core.enums;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import lombok.Getter;
 
-import static com.sei.tamias.global.ConstantsKt.*;
+import static com.sei.tamias.global.constnts.Constants.*;
 import static com.sei.tamias.util.Options.Option;
 
 @Getter

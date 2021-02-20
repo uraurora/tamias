@@ -7,10 +7,10 @@ import java.time.ZoneOffset;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.sei.tamias.global.ConfigsKt;
+import com.sei.tamias.global.constnts.Constants;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.lang.NonNull;
 
 /**
  * <p>
@@ -30,14 +30,14 @@ public class DateTest implements Serializable {
     @TableId(type = IdType.AUTO, value = "id")
     private Integer id;
 
-    private String time = ConfigsKt.getDateTimeFormatter().format(LocalDateTime.now(ZoneOffset.of("+8")));
+    private String time = Constants.DATETIME_FORMATTER.format(LocalDateTime.now(ZoneOffset.of("+8")));
 
     public int component1() {
         return id;
     }
 
-    @NotNull
+    @NonNull
     public LocalDateTime component2() {
-        return LocalDateTime.parse(time, ConfigsKt.getDateTimeFormatter());
+        return LocalDateTime.parse(time, Constants.DATETIME_FORMATTER);
     }
 }

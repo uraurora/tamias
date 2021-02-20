@@ -3,8 +3,9 @@ package com.sei.tamias.service;
 import com.sei.tamias.db.entity.FileInfo;
 import com.sei.tamias.db.entity.FileTag;
 import com.baomidou.mybatisplus.extension.service.IService;
-import kotlin.Pair;
-import org.jetbrains.annotations.NotNull;
+import com.sei.tamias.util.Options;
+import com.sun.istack.internal.NotNull;
+import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -25,39 +26,39 @@ public interface IFileTagService extends IService<FileTag> {
      * @param fileId 文件信息id
      * @return 文件标签列表
      */
-    List<FileTag> listByFileInfoId(@NotNull Long fileId);
+    List<FileTag> listByFileInfoId(@NonNull Long fileId);
 
     /**
      * 根据文件信息
      * @param idList 文件信息id列表
      * @return 由文件信息id映射标签列表的map
      */
-    Map<Long, List<FileTag>> mapByFileInfoIds(@NotNull Collection<? extends Long> idList);
+    Map<Long, List<FileTag>> mapByFileInfoIds(@NonNull Collection<? extends Long> idList);
 
     /**
      * 根据文件信息查找标签信息
      * @param fileInfo 文件信息
      * @return 文件标签列表
      */
-    List<FileTag> listByFileInfo(@NotNull FileInfo fileInfo);
+    List<FileTag> listByFileInfo(@NonNull FileInfo fileInfo);
 
     /**
      * 根据文件信息
      * @param files 文件信息id列表
      * @return 由文件信息id映射标签列表的map
      */
-    Map<Long, List<FileTag>> mapByFileInfos(@NotNull Collection<? extends FileInfo> files);
+    Map<Long, List<FileTag>> mapByFileInfos(@NonNull Collection<? extends FileInfo> files);
 
     /**
      * 返回标签信息和对应关联的文件个数
      * @return
      */
-    List<Pair<FileTag, Integer>> countByTags();
+    List<Options.Pair<FileTag, Integer>> countByTags();
 
     /**
      * tagId对应的标签关联的文件数
      * @param tagId 标签id
      * @return 文件数
      */
-    Integer countByTag(@NotNull Long tagId);
+    Integer countByTag(@NonNull Long tagId);
 }

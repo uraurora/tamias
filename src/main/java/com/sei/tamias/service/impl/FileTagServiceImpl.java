@@ -7,8 +7,7 @@ import com.sei.tamias.db.entity.FileTagRelation;
 import com.sei.tamias.db.mapper.FileTagMapper;
 import com.sei.tamias.service.IFileTagRelationService;
 import com.sei.tamias.service.IFileTagService;
-import kotlin.Pair;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -31,7 +30,7 @@ public class FileTagServiceImpl extends ServiceImpl<FileTagMapper, FileTag> impl
     private IFileTagRelationService relationService;
 
     @Override
-    public List<FileTag> listByFileInfoId(@NotNull Long fileId) {
+    public List<FileTag> listByFileInfoId(@NonNull Long fileId) {
         // 首先找到文件标签关联表中fileId相等的行
         List<Long> tagIds = relationService.lambdaQuery()
                 .ge(FileTagRelation::getFileId, fileId)
@@ -44,7 +43,7 @@ public class FileTagServiceImpl extends ServiceImpl<FileTagMapper, FileTag> impl
     }
 
     @Override
-    public Map<Long, List<FileTag>> mapByFileInfoIds(@NotNull Collection<? extends Long> idList) {
+    public Map<Long, List<FileTag>> mapByFileInfoIds(@NonNull Collection<? extends Long> idList) {
         Map<Long, List<FileTagRelation>> tagMap = relationService.lambdaQuery()
                 .select(FileTagRelation::getFileId, FileTagRelation::getTagId)
                 .in(FileTagRelation::getFileId, idList)
@@ -64,12 +63,12 @@ public class FileTagServiceImpl extends ServiceImpl<FileTagMapper, FileTag> impl
     }
 
     @Override
-    public List<FileTag> listByFileInfo(@NotNull FileInfo fileInfo) {
+    public List<FileTag> listByFileInfo(@NonNull FileInfo fileInfo) {
         return fileInfo.getId()==null? emptyList() : listByFileInfoId(fileInfo.getId());
     }
 
     @Override
-    public Map<Long, List<FileTag>> mapByFileInfos(@NotNull Collection<? extends FileInfo> files) {
+    public Map<Long, List<FileTag>> mapByFileInfos(@NonNull Collection<? extends FileInfo> files) {
         List<Long> ids = files.stream().map(FileInfo::getId).collect(toList());
         return ids.isEmpty()? emptyMap() : mapByFileInfoIds(ids);
     }
@@ -81,7 +80,7 @@ public class FileTagServiceImpl extends ServiceImpl<FileTagMapper, FileTag> impl
     }
 
     @Override
-    public Integer countByTag(@NotNull Long tagId) {
+    public Integer countByTag(@NonNull Long tagId) {
         return relationService.lambdaQuery()
                 .eq(FileTagRelation::getTagId, tagId)
                 .count();

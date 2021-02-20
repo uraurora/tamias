@@ -1,7 +1,7 @@
 package com.sei.tamias.core.file;
 
 
-import com.sei.tamias.global.ConstantsKt;
+import com.sei.tamias.core.value.FileInfoContext;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import static com.sei.tamias.global.constnts.Constants.ALL_PATTERN;
 import static com.sei.tamias.util.Options.listOf;
 
 /**
@@ -70,7 +71,7 @@ public abstract class FileSearcher {
     }
 
     public static List<FileInfoContext> searchRecursive(Path dir) throws IOException {
-        return searchRecursive(dir, ConstantsKt.ALL_PATTERN, path->true);
+        return searchRecursive(dir, ALL_PATTERN, path->true);
     }
 
         /**
