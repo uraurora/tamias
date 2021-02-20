@@ -1,6 +1,9 @@
 package com.sei.tamias.core.file;
 
 
+import com.sei.tamias.core.global.ConstantsKt;
+import org.springframework.util.FileCopyUtils;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -8,6 +11,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import static com.sei.tamias.util.Options.buildList;
 import static com.sei.tamias.util.Options.listOf;
 
 /**
@@ -44,31 +48,41 @@ public abstract class FileSearcher {
      * [pattern]: 文件名正则
      * [filter]: 过滤器
      */
-//    fun searchRecursive(dir: Path, pattern: String = ALL_PATTERN, filter: (Path) -> Boolean = { true }): List<FileInfoContext>{
-//        return mutableListOf<FileInfoContext>().apply {
-//            Files.walkFileTree(dir, object :SimpleFileVisitor<Path> () {
-//                override fun visitFile(file: Path?, attrs: BasicFileAttributes?): FileVisitResult {
-//                    if (file != null && attrs != null) {
-//                        file.takeIf {
-//                            Files.isRegularFile(it) &&
-//                                    Pattern.matches(pattern, it.fileName.toString()) &&
-//                                    filter(it)
-//                        }?.let { add(FileInfoContext(attributes = attrs, dir = file)) }
-//                    }
-//                    return FileVisitResult.CONTINUE
-//                }
-//            })
-//        }
-//    }
+    public static List<FileInfoContext> searchRecursive(Path dir, String pattern, Predicate<Path> filter) throws IOException {
+        final List<FileInfoContext> res = listOf();
+        Files.walkFileTree(dir, new SimpleFileVisitor<Path>(){
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (file != null && attrs != null) {
+                    final boolean b = Files.isRegularFile(file) &&
+                            Pattern.matches(pattern, file.getFileName().toString()) &&
+                            filter.test(file);
+                    if(b){
+                        res.add(new FileInfoContext(file, attrs));
+                    }
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return res;
+    }
 
-    /**
-     * 判断sub是否与parent相等或在其之下<br></br>
-     * parent必须存在，且必须是directory,否则抛出[IllegalArgumentException]
-     * @param parent 父级目录
-     * @param sub 子级目录
-     * @return 判断sub是否与parent相等或在其之下
-     * @throws IOException io异常
-     */
+    public static List<FileInfoContext> searchRecursive(Path dir, String pattern) throws IOException {
+        return searchRecursive(dir, pattern, path->true);
+    }
+
+    public static List<FileInfoContext> searchRecursive(Path dir) throws IOException {
+        return searchRecursive(dir, ConstantsKt.ALL_PATTERN, path->true);
+    }
+
+        /**
+         * 判断sub是否与parent相等或在其之下<br></br>
+         * parent必须存在，且必须是directory,否则抛出[IllegalArgumentException]
+         * @param parent 父级目录
+         * @param sub 子级目录
+         * @return 判断sub是否与parent相等或在其之下
+         * @throws IOException io异常
+         */
     public static boolean sameOrSub(Path parent, Path sub) throws IOException {
         Path subPath = sub;
         if(!Files.exists(parent) || !Files.isDirectory(parent)) {
