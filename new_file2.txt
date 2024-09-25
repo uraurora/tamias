@@ -1,0 +1,1 @@
+{"model_a_chats": [{"user": "hello", "assistant": "hello, how can i help you"}, {"user": "bye", "assistant": "bye"}], "model_b_chats": [], "eval": "A_Better", "memo": "B\u6ca1\u6709\u5bf9\u8bdd"}
